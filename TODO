@@ -1,14 +1,11 @@
-Local file read
-
 Drag drop
 File read
 
 Blocks model
-Show as hex
 Show as text
 Show as colour
 
-Scroller
+Click to show options
 
 Block options
  - Width
@@ -16,14 +13,16 @@ Block options
 
 Change height callback
 
+Scroller
+
 Add Block
 Remove/merge
 
-Cursor
+Cursor  
 
 3 column style
 
 Block parser
  - DICOM
- - PNG
+ - BMP
  - ROM
