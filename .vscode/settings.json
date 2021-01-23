@@ -1,0 +1,4 @@
+{
+  "prettier.packageManager": "yarn",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+}

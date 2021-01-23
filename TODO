@@ -1,0 +1,29 @@
+Local file read
+
+Drag drop
+File read
+
+Blocks model
+Show as hex
+Show as text
+Show as colour
+
+Scroller
+
+Block options
+ - Width
+ - Color palette
+
+Change height callback
+
+Add Block
+Remove/merge
+
+Cursor
+
+3 column style
+
+Block parser
+ - DICOM
+ - PNG
+ - ROM
