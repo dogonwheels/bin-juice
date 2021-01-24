@@ -13,7 +13,7 @@ const TextBlock: FunctionComponent<BlockProps> = ({ data, start, length }) => {
 
   const result: ReactElement[] = [];
   for (let i = 0; i < length; i++) {
-    result.push(<span key={i}> {buffer.getUint8(i).toString(16)}</span>);
+    result.push(<span key={i}> {String.fromCharCode(buffer.getUint8(i))}</span>);
   }
   return <div>{result}</div>;
 };

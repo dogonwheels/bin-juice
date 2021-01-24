@@ -43,7 +43,7 @@ function App() {
       setBlocks([
         { type: BlockType.Hex, length: 14 },
         { type: BlockType.Text, length: 40 },
-        { type: BlockType.Pixel, length: array.byteLength - 54 },
+        { type: BlockType.Hex, length: array.byteLength - 54 },
       ]);
     }
     createFile();

@@ -1,26 +1,31 @@
-Drag drop
-File read
+Fixed height rows styled
 
-Blocks model
-Show as text
-Show as colour
+3 column style
+
+Dataview at top
+
 
 Click to show options
+
+Cursor 
 
 Block options
  - Width
  - Color palette
+ - Flip image
+
+Add Block
+Remove/merge
+
+Drag drop
+File read
 
 Change height callback
 
 Scroller
 
-Add Block
-Remove/merge
+Virtual within item - render rows
 
-Cursor  
-
-3 column style
 
 Block parser
  - DICOM
