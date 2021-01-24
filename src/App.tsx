@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import BlockProps from './BlockProps';
 import HexBlock from './HexBlock';
+import Inspector from './Inspector';
 import PixelBlock from './PixelBlock';
 import TextBlock from './TextBlock';
 
@@ -82,12 +83,21 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Bin Juice</h1>
-      <h2>Exploring the contents of your binaries</h2>
-
-      {layout.map(({ Component, start, length }) => (
-        <Component key={start} start={start} length={length} data={data} onUpdateCursor={setCursor} cursor={cursor} />
-      ))}
+      <div className="Blocks">
+        <div className="Scroller">
+          {layout.map(({ Component, start, length }) => (
+            <Component
+              key={start}
+              start={start}
+              length={length}
+              data={data}
+              onUpdateCursor={setCursor}
+              cursor={cursor}
+            />
+          ))}
+        </div>
+      </div>
+      <Inspector className="Inspector" data={data} cursor={cursor} />
     </div>
   );
 }
