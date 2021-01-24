@@ -1,13 +1,6 @@
-Fixed height rows styled
-
-3 column style
-
 Dataview at top
 
-
-Click to show options
-
-Cursor 
+Show details for cursor
 
 Block options
  - Width
@@ -17,6 +10,10 @@ Block options
 Add Block
 Remove/merge
 
+style
+
+Common up blocks
+
 Drag drop
 File read
 
@@ -25,7 +22,6 @@ Change height callback
 Scroller
 
 Virtual within item - render rows
-
 
 Block parser
  - DICOM

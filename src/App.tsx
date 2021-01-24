@@ -30,6 +30,7 @@ interface Layout {
 function App() {
   const [data, setData] = useState<ArrayBuffer>(new ArrayBuffer(0));
   const [blocks, setBlocks] = useState<Block[]>([]);
+  const [cursor, setCursor] = useState(0);
 
   // DOMFIXME: useUrlAsBuffer/Blocks
   useEffect(() => {
@@ -85,7 +86,7 @@ function App() {
       <h2>Exploring the contents of your binaries</h2>
 
       {layout.map(({ Component, start, length }) => (
-        <Component key={start} start={start} length={length} data={data} />
+        <Component key={start} start={start} length={length} data={data} onUpdateCursor={setCursor} cursor={cursor} />
       ))}
     </div>
   );
