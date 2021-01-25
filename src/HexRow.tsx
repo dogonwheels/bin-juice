@@ -8,6 +8,7 @@ function HexRow({ data, start, length, cursor, onUpdateCursor }: ViewProps) {
     (e) => {
       const position = parseInt(e.target.dataset.position, 10);
       onUpdateCursor(position);
+      e.stopPropagation();
     },
     [onUpdateCursor],
   );

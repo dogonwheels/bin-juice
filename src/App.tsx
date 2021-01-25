@@ -1,16 +1,11 @@
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import BlockProps from './BlockProps';
+import BlockType from './BlockType';
 import HexBlock from './HexBlock';
 import Inspector from './Inspector';
 // import PixelBlock from './PixelBlock';
 import TextBlock from './TextBlock';
-
-enum BlockType {
-  Hex,
-  Text,
-  // Pixel,
-}
 
 const componentsForType = {
   [BlockType.Hex]: HexBlock,
@@ -25,6 +20,7 @@ interface Block {
 interface Layout {
   Component: FunctionComponent<BlockProps>;
   start: number;
+  end: number;
   length: number;
 }
 
@@ -42,8 +38,12 @@ function App() {
       setData(new DataView(array));
       setBlocks([
         { type: BlockType.Hex, length: 14 },
-        { type: BlockType.Text, length: 40 },
-        { type: BlockType.Hex, length: array.byteLength - 54 },
+        { type: BlockType.Hex, length: 40 },
+        { type: BlockType.Hex, length: 40 },
+        { type: BlockType.Hex, length: 40 },
+        { type: BlockType.Hex, length: 40 },
+
+        //{ type: BlockType.Hex, length: array.byteLength - 54 },
       ]);
     }
     createFile();
@@ -63,6 +63,7 @@ function App() {
           result.push({
             Component: componentsForType[type],
             start,
+            end,
             length: end - start,
           });
         }
@@ -72,7 +73,7 @@ function App() {
     }
 
     return result;
-  }, [blocks]);
+  }, [blocks, data]);
 
   /*
   onOptionChange(index, key, value) {
@@ -100,6 +101,50 @@ function App() {
     [layout, blocks],
   );
 
+  const onMergeBlock = useCallback(
+    (start) => {
+      const index = layout.findIndex((block) => block.start === start);
+      // Can't delete the first block
+      if (index < 1) {
+        return;
+      }
+
+      // Remove the block and add its length to the previous one
+      const newBlocks = blocks.slice();
+      newBlocks.splice(index, 1);
+      newBlocks[index - 1].length += blocks[index].length;
+
+      setBlocks(newBlocks);
+    },
+    [blocks, layout],
+  );
+
+  const onSplitBlock = useCallback(() => {
+    const index = layout.findIndex((block) => cursor >= block.start && cursor < block.end);
+    if (index === -1) {
+      return;
+    }
+
+    // Can't split at the first cell
+    const oldLayoutBlock = layout[index];
+    if (cursor === oldLayoutBlock.start) {
+      return;
+    }
+
+    const newBlocks = blocks.slice();
+    const partition = cursor - oldLayoutBlock.start;
+
+    newBlocks[index].length = partition;
+    const newBlock = {
+      ...blocks[index],
+      length: oldLayoutBlock.length - partition,
+    };
+
+    newBlocks.splice(index + 1, 0, newBlock);
+
+    setBlocks(newBlocks);
+  }, [blocks, cursor, layout]);
+
   return data ? (
     <div className="App">
       <div className="Blocks">
@@ -113,11 +158,12 @@ function App() {
               cursor={cursor}
               onUpdateCursor={setCursor}
               onUpdateLength={onUpdateLength}
+              onMergeBlock={onMergeBlock}
             />
           ))}
         </div>
       </div>
-      <Inspector className="Inspector" data={data} cursor={cursor} />
+      <Inspector className="Inspector" data={data} cursor={cursor} onSplitBlock={onSplitBlock} />
     </div>
   ) : (
     <h2>Loading...</h2>

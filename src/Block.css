@@ -7,9 +7,8 @@
   background-color: red;
 }
 
-.BlockType {
+.BlockAddress {
   width: 200px;
-  border: 2px solid blue;
 }
 
 .BlockContents {

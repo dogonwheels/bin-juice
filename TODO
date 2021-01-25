@@ -1,25 +1,26 @@
-Show details for cursor
+Add Block
+Remove/merge
+
+style
+
+Endian toggle
+
+Common up blocks
 
 Block options
  - Width
  - Color palette
  - Flip image
 
-Add Block
-Remove/merge
+Scroller
 
-style
-
-Common up blocks
+Virtual within item - render rows
 
 Drag drop
 File read
 
 Change height callback
 
-Scroller
-
-Virtual within item - render rows
 
 Block parser
  - DICOM

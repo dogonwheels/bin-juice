@@ -1,9 +1,11 @@
 import React, { Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
 import './Block.css';
 import BlockProps from './BlockProps';
+import BlockType from './BlockType';
+import { formatHex } from './formatters';
 import HexRow from './HexRow';
 
-function HexBlock({ data, start, length, cursor, onUpdateCursor, onUpdateLength }: BlockProps) {
+function HexBlock({ data, start, length, cursor, onUpdateCursor, onUpdateLength, onMergeBlock }: BlockProps) {
   const columns = 16;
   const isSelected = cursor >= start && cursor < start + length;
 
@@ -25,35 +27,45 @@ function HexBlock({ data, start, length, cursor, onUpdateCursor, onUpdateLength 
   }
 
   /* <Block type=Hex options=[...] start length cursor >result</Block>
-  check isSelected
-  click fallthrough to set to 0
-  render dropdown for block type
-  delete block
-  change size
-  */
+   */
 
-  const onLengthChange = useCallback((e) => {
-    const newLength = parseInt(e.target.value, 10);
-    if (newLength) {
-      onUpdateLength(start, newLength);
-    }
-  }, []);
+  const onLengthChange = useCallback(
+    (e) => {
+      const newLength = parseInt(e.target.value, 10);
+      if (newLength) {
+        onUpdateLength(start, newLength);
+      }
+    },
+    [start, onUpdateLength],
+  );
 
   const onBlockSelect = useCallback(() => {
     onUpdateCursor(start);
-  }, []);
+  }, [start, onUpdateCursor]);
+
+  const onMergeClick = useCallback(() => {
+    onMergeBlock(start);
+  }, [start, onMergeBlock]);
+
+  const currentType = BlockType.Hex;
+  const types = Object.values(BlockType);
 
   return (
     <div className={`Block${isSelected ? ' Selected' : ''}`} onClick={onBlockSelect}>
-      <div className="BlockType">Hex</div>
+      <div className="BlockAddress">{formatHex(start, 16)}</div>
       <div className="BlockContents">{result}</div>
       <div className="BlockOptions">
+        <div>
+          <select>
+            {types.map((type) => (
+              <option selected={type === currentType}>{type}</option>
+            ))}
+          </select>
+          {start ? <button onClick={onMergeClick}>Merge</button> : null}
+        </div>
         {isSelected ? (
           <Fragment>
             <input value={length} onChange={onLengthChange} />
-            <div>Foo</div>
-            <div>Foo</div>
-            <div>Foo</div>
           </Fragment>
         ) : null}
       </div>
