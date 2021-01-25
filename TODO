@@ -1,25 +1,32 @@
-Block options
- - Width/columns
- - SIngle or double char
- - Color palette
- - Flip image
-
 Scroller
+ - Block layout
+ - Virtual within item - render rows
 
-Block layout
+Layout
+ - getHeight (px)
+ - getY(address) (px)
+ - getAddress(y)
+ - Absolute position rows
 
-Virtual within item - render rows
+
+Accumlate layout height
+
+Drag drop
+File read
+
+Image block
 
 Endian toggle
 
 style input
 style scroller
 
-
-Drag drop
-File read
+Parser dropdown
 
 Block parser
  - DICOM
  - BMP
  - ROM
+
+
+ Code cleanup

@@ -52,6 +52,11 @@
   padding: 3px 5px;
 }
 
+.TextCell {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 3px 1px;
+}
+
 .Cell.Selected {
   background: var(--yellow);
   color: var(--base03);

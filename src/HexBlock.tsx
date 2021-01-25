@@ -1,29 +1,15 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { FunctionComponent, ReactElement, useCallback } from 'react';
+import BitLength from './BitLength';
 import './Block.css';
-import HexRow from './HexRow';
+import { formatHex } from './formatters';
+import Rows from './Rows';
 import ViewProps from './ViewProps';
 
-const HexBlock: FunctionComponent<ViewProps> = ({ data, start, length, cursor, onUpdateCursor }) => {
+const HexBlock: FunctionComponent<ViewProps> = (props) => {
   const columns = 16;
+  const formatter = useCallback((value) => formatHex(value, 2, true), []);
 
-  const rows: ReactElement[] = [];
-  for (let row = 0; row < Math.ceil(length / columns); row++) {
-    const rowStart = start + row * columns;
-    const rowEnd = Math.min(start + length, rowStart + columns);
-    const rowLength = rowEnd - rowStart;
-    rows.push(
-      <HexRow
-        key={row}
-        data={data}
-        start={rowStart}
-        length={rowLength}
-        cursor={cursor}
-        onUpdateCursor={onUpdateCursor}
-      />,
-    );
-  }
-
-  return <div>{rows}</div>;
+  return <Rows columns={columns} bitLength={BitLength.Byte} cellFormatter={formatter} {...props} />;
 };
 
 export default HexBlock;

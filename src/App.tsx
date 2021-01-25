@@ -50,6 +50,7 @@ function App() {
     createFile();
   }, []);
 
+  // Cache more detail about the layout
   const layout = useMemo(() => {
     const result: Layout[] = [];
     let position = 0;
@@ -75,12 +76,6 @@ function App() {
 
     return result;
   }, [blocks, data]);
-
-  /*
-  onOptionChange(index, key, value) {
-    blocks.clone()[index] = { ...blocks[index], [key]: value}
-  }
-  */
 
   /*
   hexLayout(14, 8) - memo? or simple calc
@@ -120,6 +115,7 @@ function App() {
   const onMergeBlock = useCallback(
     (start) => {
       const index = layout.findIndex((block) => block.start === start);
+
       // Can't delete the first block
       if (index < 1) {
         return;

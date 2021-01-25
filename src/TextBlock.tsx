@@ -1,13 +1,15 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
+import BitLength from './BitLength';
+import Rows from './Rows';
 import ViewProps from './ViewProps';
 
-const TextBlock: FunctionComponent<ViewProps> = ({ data, start, length, cursor, onUpdateCursor }) => {
-  const result: ReactElement[] = [];
-  for (let i = start; i < start + length; i++) {
-    result.push(<span key={i}> {String.fromCharCode(data.getUint8(i))}</span>);
-  }
+const TextBlock: FunctionComponent<ViewProps> = (props) => {
+  const columns = 32;
+  const formatter = useCallback((value) => (value ? String.fromCharCode(value) : '.'), []);
 
-  return <div>{result}</div>;
+  return (
+    <Rows className="TextCell" columns={columns} bitLength={BitLength.Byte} cellFormatter={formatter} {...props} />
+  );
 };
 
 export default TextBlock;
