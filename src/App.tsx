@@ -3,19 +3,19 @@ import './App.css';
 import BlockProps from './BlockProps';
 import HexBlock from './HexBlock';
 import Inspector from './Inspector';
-import PixelBlock from './PixelBlock';
+// import PixelBlock from './PixelBlock';
 import TextBlock from './TextBlock';
 
 enum BlockType {
   Hex,
   Text,
-  Pixel,
+  // Pixel,
 }
 
 const componentsForType = {
   [BlockType.Hex]: HexBlock,
   [BlockType.Text]: TextBlock,
-  [BlockType.Pixel]: PixelBlock,
+  // [BlockType.Pixel]: PixelBlock,
 };
 interface Block {
   type: BlockType;
@@ -29,19 +29,17 @@ interface Layout {
 }
 
 function App() {
-  const [data, setData] = useState<ArrayBuffer>(new ArrayBuffer(0));
+  const [data, setData] = useState<DataView>();
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [cursor, setCursor] = useState(0);
 
   // DOMFIXME: useUrlAsBuffer/Blocks
   useEffect(() => {
-    const array = new ArrayBuffer(1000);
-    setData(array);
     async function createFile() {
       let response = await fetch('FLAG_B24.BMP');
       let data = await response.blob();
       let array = await data.arrayBuffer();
-      setData(array);
+      setData(new DataView(array));
       setBlocks([
         { type: BlockType.Hex, length: 14 },
         { type: BlockType.Text, length: 40 },
@@ -81,7 +79,7 @@ function App() {
   pixelLayout
   */
 
-  return (
+  return data ? (
     <div className="App">
       <div className="Blocks">
         <div className="Scroller">
@@ -99,6 +97,8 @@ function App() {
       </div>
       <Inspector className="Inspector" data={data} cursor={cursor} />
     </div>
+  ) : (
+    <h2>Loading...</h2>
   );
 }
 

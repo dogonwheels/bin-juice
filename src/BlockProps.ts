@@ -1,5 +1,5 @@
 export default interface BlockProps {
-  data: ArrayBuffer;
+  data: DataView;
   start: number;
   length: number;
   cursor: number;

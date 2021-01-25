@@ -2,7 +2,7 @@ import React, { FunctionComponent, ReactElement, useEffect, useState } from 'rea
 
 interface InspectorProps {
   className: string;
-  data: ArrayBuffer;
+  data: DataView;
   cursor: number;
 }
 

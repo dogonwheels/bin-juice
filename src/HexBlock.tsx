@@ -3,32 +3,35 @@ import './Block.css';
 import BlockProps from './BlockProps';
 import HexRow from './HexRow';
 
-// DOMFIXME: RowBlock
 function HexBlock({ data, start, length, cursor, onUpdateCursor }: BlockProps) {
-  const [buffer, setBuffer] = useState(new DataView(data));
-
   const columns = 16;
-
-  useEffect(() => {
-    setBuffer(new DataView(data, start, length));
-  }, [data, start, length]);
-
   const isSelected = cursor >= start && cursor < start + length;
 
   const result: ReactElement[] = [];
   for (let row = 0; row < Math.ceil(length / columns); row++) {
+    const rowStart = start + row * columns;
+    const rowEnd = Math.min(start + length, rowStart + columns);
+    const rowLength = rowEnd - rowStart;
     result.push(
       <HexRow
         key={row}
-        start={start}
-        offset={row * columns}
-        columns={columns}
-        buffer={buffer}
+        data={data}
+        start={rowStart}
+        length={rowLength}
         cursor={cursor}
         onUpdateCursor={onUpdateCursor}
       />,
     );
   }
+
+  /* <Block type=Hex options=[...] start length cursor >result</Block>
+  check isSelected
+  click fallthrough to set to 0
+  render dropdown for block type
+  delete block
+  change size
+  */
+
   return (
     <div className={`Block${isSelected ? ' Selected' : ''}`}>
       <div className="BlockType">Hex</div>
