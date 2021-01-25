@@ -1,25 +1,23 @@
-Endian toggle
-Common up blocks
-
-
-style input
-style scroller
-
-
 Block options
- - Width
+ - Width/columns
+ - SIngle or double char
  - Color palette
  - Flip image
 
 Scroller
 
+Block layout
+
 Virtual within item - render rows
+
+Endian toggle
+
+style input
+style scroller
+
 
 Drag drop
 File read
-
-Change height callback
-
 
 Block parser
  - DICOM

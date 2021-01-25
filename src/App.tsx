@@ -1,24 +1,25 @@
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
-import BlockProps from './BlockProps';
+import Block from './Block';
 import BlockType from './BlockType';
 import HexBlock from './HexBlock';
 import Inspector from './Inspector';
 // import PixelBlock from './PixelBlock';
 import TextBlock from './TextBlock';
+import ViewProps from './ViewProps';
 
-const componentsForType = {
+const componentsForType: { [blockType: string]: FunctionComponent<ViewProps> } = {
   [BlockType.Hex]: HexBlock,
   [BlockType.Text]: TextBlock,
   // [BlockType.Pixel]: PixelBlock,
 };
-interface Block {
+interface BlockPosition {
   type: BlockType;
   length: number;
 }
 
 interface Layout {
-  Component: FunctionComponent<BlockProps>;
+  type: BlockType;
   start: number;
   end: number;
   length: number;
@@ -26,7 +27,7 @@ interface Layout {
 
 function App() {
   const [data, setData] = useState<DataView>();
-  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [blocks, setBlocks] = useState<BlockPosition[]>([]);
   const [cursor, setCursor] = useState(0);
 
   // DOMFIXME: useUrlAsBuffer/Blocks
@@ -39,7 +40,7 @@ function App() {
       setBlocks([
         { type: BlockType.Hex, length: 14 },
         { type: BlockType.Hex, length: 40 },
-        { type: BlockType.Hex, length: 40 },
+        { type: BlockType.Text, length: 40 },
         { type: BlockType.Hex, length: 40 },
         { type: BlockType.Hex, length: 40 },
 
@@ -61,7 +62,7 @@ function App() {
         // Only add the block if it covers data
         if (start < data.byteLength) {
           result.push({
-            Component: componentsForType[type],
+            type,
             start,
             end,
             length: end - start,
@@ -85,6 +86,21 @@ function App() {
   hexLayout(14, 8) - memo? or simple calc
   pixelLayout
   */
+
+  const onUpdateType = useCallback(
+    (start, type) => {
+      const index = layout.findIndex((block) => block.start === start);
+      if (index === -1) {
+        return;
+      }
+
+      const newBlocks = blocks.slice();
+      newBlocks[index].type = type;
+
+      setBlocks(newBlocks);
+    },
+    [blocks, layout],
+  );
 
   const onUpdateLength = useCallback(
     (start, length) => {
@@ -149,15 +165,18 @@ function App() {
     <div className="App">
       <div className="Blocks">
         <div className="Scroller">
-          {layout.map(({ Component, start, length }) => (
-            <Component
+          {layout.map(({ type, start, length }) => (
+            <Block
               key={start}
+              type={type}
               start={start}
               length={length}
               data={data}
               cursor={cursor}
+              contentsComponent={componentsForType[type]}
               onUpdateCursor={setCursor}
               onUpdateLength={onUpdateLength}
+              onUpdateType={onUpdateType}
               onMergeBlock={onMergeBlock}
             />
           ))}
