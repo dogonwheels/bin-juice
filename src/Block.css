@@ -1,37 +1,59 @@
 .Block {
-  border: 3px solid red;
+  --rowHeight: 32px;
   display: flex;
 }
 
 .Block.Selected {
-  background-color: red;
+  color: var(--base02);
+  background-color: var(--orange);
+  border-radius: 8px 0 0 8px;
 }
 
 .BlockAddress {
+  height: var(--rowHeight);
+  display: flex;
+  padding: 0 4px;
+  align-items: center;
   width: 200px;
 }
 
+.BlockActions {
+  display: flex;
+  align-items: center;
+  height: var(--rowHeight);
+  width: 150px;
+}
+
 .BlockContents {
-  border: 2px solid yellow;
   flex-grow: 1;
 }
 
 .BlockOptions {
   width: 200px;
-  height: 24px;
-  overflow: visible;
-  border: 2px solid green;
+}
+
+.BlockOptionsOverflow {
+  height: var(--rowHeight);
+}
+
+.BlockOptionList {
+  padding: 8px;
+  background: var(--orange);
+  border-radius: 8px 0 0 8px;
 }
 
 .Row {
-  height: 24px;
-  border: 1px solid purple;
+  height: var(--rowHeight);
+  display: flex;
+  align-items: center;
 }
 
 .Cell {
-  border: 1px solid black;
+  padding: 3px 5px;
 }
 
 .Cell.Selected {
-  background: purple;
+  background: var(--yellow);
+  color: var(--base03);
+  border-radius: 8px;
 }

@@ -53,21 +53,25 @@ function HexBlock({ data, start, length, cursor, onUpdateCursor, onUpdateLength,
   return (
     <div className={`Block${isSelected ? ' Selected' : ''}`} onClick={onBlockSelect}>
       <div className="BlockAddress">{formatHex(start, 16)}</div>
+      <div className="BlockActions">
+        <select>
+          {types.map((type) => (
+            <option selected={type === currentType}>{type}</option>
+          ))}
+        </select>
+        {start ? <button onClick={onMergeClick}>Merge</button> : null}
+      </div>
       <div className="BlockContents">{result}</div>
       <div className="BlockOptions">
-        <div>
-          <select>
-            {types.map((type) => (
-              <option selected={type === currentType}>{type}</option>
-            ))}
-          </select>
-          {start ? <button onClick={onMergeClick}>Merge</button> : null}
+        <div className="BlockOptionsOverflow">
+          {isSelected ? (
+            <div className="BlockOptionList">
+              <div>
+                <input value={length} onChange={onLengthChange} />
+              </div>
+            </div>
+          ) : null}
         </div>
-        {isSelected ? (
-          <Fragment>
-            <input value={length} onChange={onLengthChange} />
-          </Fragment>
-        ) : null}
       </div>
     </div>
   );
