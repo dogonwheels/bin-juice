@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback } from 'react';
-import BlockProps from './BlockProps';
+import ViewProps from './ViewProps';
 
-function HexRow({ data, start, length, cursor, onUpdateCursor }: BlockProps) {
+function HexRow({ data, start, length, cursor, onUpdateCursor }: ViewProps) {
   const result: ReactElement[] = [];
 
   const onCellClick = useCallback(

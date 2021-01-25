@@ -1,9 +1,9 @@
-import React, { Fragment, ReactElement, useEffect, useState } from 'react';
+import React, { Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
 import './Block.css';
 import BlockProps from './BlockProps';
 import HexRow from './HexRow';
 
-function HexBlock({ data, start, length, cursor, onUpdateCursor }: BlockProps) {
+function HexBlock({ data, start, length, cursor, onUpdateCursor, onUpdateLength }: BlockProps) {
   const columns = 16;
   const isSelected = cursor >= start && cursor < start + length;
 
@@ -32,13 +32,25 @@ function HexBlock({ data, start, length, cursor, onUpdateCursor }: BlockProps) {
   change size
   */
 
+  const onLengthChange = useCallback((e) => {
+    const newLength = parseInt(e.target.value, 10);
+    if (newLength) {
+      onUpdateLength(start, newLength);
+    }
+  }, []);
+
+  const onBlockSelect = useCallback(() => {
+    onUpdateCursor(start);
+  }, []);
+
   return (
-    <div className={`Block${isSelected ? ' Selected' : ''}`}>
+    <div className={`Block${isSelected ? ' Selected' : ''}`} onClick={onBlockSelect}>
       <div className="BlockType">Hex</div>
       <div className="BlockContents">{result}</div>
       <div className="BlockOptions">
         {isSelected ? (
           <Fragment>
+            <input value={length} onChange={onLengthChange} />
             <div>Foo</div>
             <div>Foo</div>
             <div>Foo</div>

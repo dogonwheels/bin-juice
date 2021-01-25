@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import BlockProps from './BlockProps';
 import HexBlock from './HexBlock';
@@ -53,17 +53,23 @@ function App() {
     const result: Layout[] = [];
     let position = 0;
 
-    // DOMFIXME: don't recalc if options change
-    blocks.forEach(({ type, length }) => {
-      result.push({
-        Component: componentsForType[type],
-        start: position,
-        length,
-        /* width, height from layout */
-      });
+    if (data) {
+      blocks.forEach(({ type, length }) => {
+        const start = position;
+        const end = Math.min(position + length, data.byteLength);
 
-      position += length;
-    });
+        // Only add the block if it covers data
+        if (start < data.byteLength) {
+          result.push({
+            Component: componentsForType[type],
+            start,
+            length: end - start,
+          });
+        }
+
+        position += length;
+      });
+    }
 
     return result;
   }, [blocks]);
@@ -79,6 +85,21 @@ function App() {
   pixelLayout
   */
 
+  const onUpdateLength = useCallback(
+    (start, length) => {
+      const index = layout.findIndex((block) => block.start === start);
+      if (index === -1) {
+        return;
+      }
+
+      const newBlocks = blocks.slice();
+      newBlocks[index].length = length;
+
+      setBlocks(newBlocks);
+    },
+    [layout, blocks],
+  );
+
   return data ? (
     <div className="App">
       <div className="Blocks">
@@ -89,8 +110,9 @@ function App() {
               start={start}
               length={length}
               data={data}
-              onUpdateCursor={setCursor}
               cursor={cursor}
+              onUpdateCursor={setCursor}
+              onUpdateLength={onUpdateLength}
             />
           ))}
         </div>

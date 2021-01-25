@@ -1,7 +1,5 @@
-export default interface BlockProps {
-  data: DataView;
-  start: number;
-  length: number;
-  cursor: number;
-  onUpdateCursor: (position: number) => void;
+import ViewProps from './ViewProps';
+
+export default interface BlockProps extends ViewProps {
+  onUpdateLength: (start: number, length: number) => void;
 }
