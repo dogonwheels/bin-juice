@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import Block from './Block';
 import BlockType from './BlockType';
@@ -36,6 +36,10 @@ function App() {
   const [blocks, setBlocks] = useState<BlockDefinition[]>([]);
   const [cursor, setCursor] = useState(0);
 
+  const scroller = useRef<HTMLDivElement>(null);
+  const [visibleStart, setVisibleStart] = useState(0);
+  const [visibleEnd, setVisibleEnd] = useState(0);
+
   // DOMFIXME: useUrlAsBuffer/Blocks
   useEffect(() => {
     async function createFile() {
@@ -43,18 +47,14 @@ function App() {
       let data = await response.blob();
       let array = await data.arrayBuffer();
       setData(new DataView(array));
-      setBlocks([
-        { type: BlockType.Hex, length: 14 },
-        { type: BlockType.Hex, length: 40 },
-        { type: BlockType.Text, length: 40 },
-        { type: BlockType.Hex, length: 120 },
-        { type: BlockType.Hex, length: 80 },
-        { type: BlockType.Hex, length: 120 },
-        { type: BlockType.Hex, length: 120 },
-        { type: BlockType.Hex, length: 120 },
-        { type: BlockType.Hex, length: 120 },
-        //{ type: BlockType.Hex, length: array.byteLength - 54 },
-      ]);
+
+      const blockSize = 1024;
+      const blocks = [];
+      for (let position = 0; position < array.byteLength; position += blockSize) {
+        const length = Math.min(blockSize, array.byteLength - position);
+        blocks.push({ type: BlockType.Hex, length });
+      }
+      setBlocks(blocks);
     }
     createFile();
   }, []);
@@ -94,10 +94,26 @@ function App() {
     return result;
   }, [blocks, data]);
 
-  /*
-  hexLayout(14, 8) - memo? or simple calc
-  pixelLayout
-  */
+  const scrollerStyle = useMemo(() => {
+    const lastBlock = blockLayout[blockLayout.length - 1];
+
+    return {
+      height: lastBlock ? lastBlock.top + lastBlock.height : 0,
+    };
+  }, [blockLayout]);
+
+  const onUpdateScroll = useCallback(() => {
+    const visibleStart = scroller.current?.scrollTop ?? 0;
+    const visibleHeight = scroller.current?.offsetHeight ?? 0;
+    setVisibleStart(visibleStart);
+    setVisibleEnd(visibleStart + visibleHeight);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (data) {
+      onUpdateScroll();
+    }
+  }, [data, onUpdateScroll]);
 
   const onUpdateType = useCallback(
     (start, type) => {
@@ -174,13 +190,10 @@ function App() {
     setBlocks(newBlocks);
   }, [blocks, blockLayout, cursor]);
 
-  const visibleStart = 150;
-  const visibleEnd = 200;
-
   return data ? (
     <div className="App">
-      <div className="Blocks">
-        <div className="Scroller">
+      <div className="Blocks" onScroll={onUpdateScroll} ref={scroller}>
+        <div className="Scroller" style={scrollerStyle}>
           {blockLayout.map(({ type, start, length, top, height }) => (
             <Block
               key={start}
@@ -205,7 +218,7 @@ function App() {
       <Inspector className="Inspector" data={data} cursor={cursor} onSplitBlock={onSplitBlock} />
     </div>
   ) : (
-    <h2>Loading...</h2>
+    <h1>Loading</h1>
   );
 }
 

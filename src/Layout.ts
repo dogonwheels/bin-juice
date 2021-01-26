@@ -6,6 +6,4 @@ export default abstract class Layout {
   }
 
   abstract getHeight: () => number;
-  abstract getTopFor: (address: number) => number;
-  abstract getAddressFor: (position: number) => number;
 }

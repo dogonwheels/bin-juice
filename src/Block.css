@@ -1,6 +1,8 @@
 .Block {
   --rowHeight: 32px;
   display: flex;
+  position: absolute;
+  width: 100%;
 }
 
 .Block.Selected {

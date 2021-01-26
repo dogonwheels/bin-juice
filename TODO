@@ -1,31 +1,17 @@
-Scroller
- - Block layout
- - Virtual within item - render rows
-
-Layout
- - getHeight (px)
- - getY(address) (px)
- - getAddress(y)
- - Absolute position rows
-
-Accumulate layout height
-
 Drag drop
 File read
 
+Common layout
+
 Image block
+ - pixel types
 
 Endian toggle
 
+More previews
+
+
 style input
 style scroller
-
-Parser dropdown
-
-Block parser
- - DICOM
- - BMP
- - ROM
-
 
  Code cleanup

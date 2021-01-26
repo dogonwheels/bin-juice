@@ -20,6 +20,8 @@ function Block({
   length,
   top,
   height,
+  visibleStart,
+  visibleEnd,
   cursor,
   onUpdateCursor,
   onUpdateLength,
@@ -66,8 +68,12 @@ function Block({
     [top, height],
   );
 
+  if (top > visibleEnd || top + height < visibleStart) {
+    return null;
+  }
+
   return (
-    <div className={`Block${isSelected ? ' Selected' : ''}`} onClick={onBlockSelect}>
+    <div className={`Block${isSelected ? ' Selected' : ''}`} style={blockLayoutStyle} onClick={onBlockSelect}>
       <div className="BlockAddress">{formatHex(start, 16)}</div>
       <div className="BlockActions">
         <select value={currentType} onChange={onTypeChange}>
@@ -79,8 +85,16 @@ function Block({
         </select>
         {start ? <button onClick={onMergeClick}>Merge</button> : null}
       </div>
-      <div className="BlockContents" style={blockLayoutStyle}>
-        <Component start={start} length={length} cursor={cursor} onUpdateCursor={onUpdateCursor} {...props} />
+      <div className="BlockContents">
+        <Component
+          start={start}
+          length={length}
+          visibleEnd={visibleEnd}
+          visibleStart={visibleStart}
+          cursor={cursor}
+          onUpdateCursor={onUpdateCursor}
+          {...props}
+        />
       </div>
       <div className="BlockOptions">
         <div className="BlockOptionsOverflow">

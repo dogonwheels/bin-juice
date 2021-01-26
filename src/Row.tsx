@@ -40,7 +40,7 @@ function Row({ data, start, length, cursor, bitLength, cellFormatter, className,
     result.push(
       <span
         onClick={onCellClick}
-        className={`Cell${isSelected ? ' Selected' : ''} ${className}`}
+        className={`Cell${isSelected ? ' Selected' : ''} ${className ?? ''}`}
         key={position}
         data-position={position}
       >
