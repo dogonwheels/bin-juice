@@ -2,6 +2,7 @@ import React, { FunctionComponent, useCallback, useEffect, useLayoutEffect, useM
 import './App.css';
 import Block from './Block';
 import BlockType from './BlockType';
+import DropArea from './DropArea';
 import HexBlock from './HexBlock';
 import Inspector from './Inspector';
 import Layout from './Layout';
@@ -215,7 +216,10 @@ function App() {
           ))}
         </div>
       </div>
-      <Inspector className="Inspector" data={data} cursor={cursor} onSplitBlock={onSplitBlock} />
+      <div className="Panel">
+        <Inspector className="Inspector" data={data} cursor={cursor} onSplitBlock={onSplitBlock} />
+        <DropArea onUpdateData={setData} />
+      </div>
     </div>
   ) : (
     <h1>Loading</h1>

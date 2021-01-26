@@ -34,10 +34,23 @@
   position: relative;
 }
 
+.Panel {
+  display: flex;
+  flex-direction: column;
+}
+
 .Inspector {
-  width: 200px;
   background: var(--yellow);
   color: var(--base03);
+  flex-grow: 1;
+}
+
+.DropArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--base1);
+  color: var(--base01);
 }
 
 button {
