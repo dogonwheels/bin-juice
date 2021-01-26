@@ -1,11 +1,13 @@
-import React, { Fragment, FunctionComponent, ReactElement, useCallback, useEffect, useState } from 'react';
-import './Block.css';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import BlockType from './BlockType';
 import { formatHex } from './formatters';
 import ViewProps from './ViewProps';
+import './Block.css';
 
 interface BlockProps extends ViewProps {
   type: BlockType;
+  top: number;
+  height: number;
   onUpdateLength: (start: number, length: number) => void;
   onUpdateType: (start: number, type: BlockType) => void;
   onMergeBlock: (start: number) => void;
@@ -13,19 +15,19 @@ interface BlockProps extends ViewProps {
 }
 
 function Block({
-  data,
+  type: currentType,
   start,
   length,
+  top,
+  height,
   cursor,
-  type: currentType,
   onUpdateCursor,
   onUpdateLength,
   onUpdateType,
   onMergeBlock,
   contentsComponent,
+  ...props
 }: BlockProps) {
-  const isSelected = cursor >= start && cursor < start + length;
-
   const onLengthChange = useCallback(
     (e) => {
       const newLength = parseInt(e.target.value, 10);
@@ -54,6 +56,15 @@ function Block({
 
   const types = Object.values(BlockType);
   const Component = contentsComponent;
+  const isSelected = cursor >= start && cursor < start + length;
+
+  const blockLayoutStyle = useMemo(
+    () => ({
+      top,
+      height,
+    }),
+    [top, height],
+  );
 
   return (
     <div className={`Block${isSelected ? ' Selected' : ''}`} onClick={onBlockSelect}>
@@ -68,8 +79,8 @@ function Block({
         </select>
         {start ? <button onClick={onMergeClick}>Merge</button> : null}
       </div>
-      <div className="BlockContents">
-        <Component data={data} start={start} length={length} cursor={cursor} onUpdateCursor={onUpdateCursor} />
+      <div className="BlockContents" style={blockLayoutStyle}>
+        <Component start={start} length={length} cursor={cursor} onUpdateCursor={onUpdateCursor} {...props} />
       </div>
       <div className="BlockOptions">
         <div className="BlockOptionsOverflow">

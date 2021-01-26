@@ -4,6 +4,8 @@ import Block from './Block';
 import BlockType from './BlockType';
 import HexBlock from './HexBlock';
 import Inspector from './Inspector';
+import Layout from './Layout';
+import layoutsForType from './layoutsForType';
 // import PixelBlock from './PixelBlock';
 import TextBlock from './TextBlock';
 import ViewProps from './ViewProps';
@@ -13,21 +15,25 @@ const componentsForType: { [blockType: string]: FunctionComponent<ViewProps> } =
   [BlockType.Text]: TextBlock,
   // [BlockType.Pixel]: PixelBlock,
 };
-interface BlockPosition {
+
+interface BlockDefinition {
   type: BlockType;
   length: number;
 }
 
-interface Layout {
+interface BlockLayout {
   type: BlockType;
   start: number;
   end: number;
   length: number;
+  top: number;
+  height: number;
+  layout: Layout;
 }
 
 function App() {
   const [data, setData] = useState<DataView>();
-  const [blocks, setBlocks] = useState<BlockPosition[]>([]);
+  const [blocks, setBlocks] = useState<BlockDefinition[]>([]);
   const [cursor, setCursor] = useState(0);
 
   // DOMFIXME: useUrlAsBuffer/Blocks
@@ -41,9 +47,12 @@ function App() {
         { type: BlockType.Hex, length: 14 },
         { type: BlockType.Hex, length: 40 },
         { type: BlockType.Text, length: 40 },
-        { type: BlockType.Hex, length: 40 },
-        { type: BlockType.Hex, length: 40 },
-
+        { type: BlockType.Hex, length: 120 },
+        { type: BlockType.Hex, length: 80 },
+        { type: BlockType.Hex, length: 120 },
+        { type: BlockType.Hex, length: 120 },
+        { type: BlockType.Hex, length: 120 },
+        { type: BlockType.Hex, length: 120 },
         //{ type: BlockType.Hex, length: array.byteLength - 54 },
       ]);
     }
@@ -51,14 +60,18 @@ function App() {
   }, []);
 
   // Cache more detail about the layout
-  const layout = useMemo(() => {
-    const result: Layout[] = [];
+  const blockLayout = useMemo(() => {
+    const result: BlockLayout[] = [];
     let position = 0;
+    let top = 0;
 
     if (data) {
       blocks.forEach(({ type, length }) => {
         const start = position;
         const end = Math.min(position + length, data.byteLength);
+
+        const layout = new layoutsForType[type](length);
+        const height = layout.getHeight();
 
         // Only add the block if it covers data
         if (start < data.byteLength) {
@@ -67,10 +80,14 @@ function App() {
             start,
             end,
             length: end - start,
+            top,
+            height,
+            layout,
           });
         }
 
         position += length;
+        top += height;
       });
     }
 
@@ -84,7 +101,7 @@ function App() {
 
   const onUpdateType = useCallback(
     (start, type) => {
-      const index = layout.findIndex((block) => block.start === start);
+      const index = blockLayout.findIndex((block) => block.start === start);
       if (index === -1) {
         return;
       }
@@ -94,12 +111,12 @@ function App() {
 
       setBlocks(newBlocks);
     },
-    [blocks, layout],
+    [blocks, blockLayout],
   );
 
   const onUpdateLength = useCallback(
     (start, length) => {
-      const index = layout.findIndex((block) => block.start === start);
+      const index = blockLayout.findIndex((block) => block.start === start);
       if (index === -1) {
         return;
       }
@@ -109,12 +126,12 @@ function App() {
 
       setBlocks(newBlocks);
     },
-    [layout, blocks],
+    [blocks, blockLayout],
   );
 
   const onMergeBlock = useCallback(
     (start) => {
-      const index = layout.findIndex((block) => block.start === start);
+      const index = blockLayout.findIndex((block) => block.start === start);
 
       // Can't delete the first block
       if (index < 1) {
@@ -128,17 +145,17 @@ function App() {
 
       setBlocks(newBlocks);
     },
-    [blocks, layout],
+    [blocks, blockLayout],
   );
 
   const onSplitBlock = useCallback(() => {
-    const index = layout.findIndex((block) => cursor >= block.start && cursor < block.end);
+    const index = blockLayout.findIndex((block) => cursor >= block.start && cursor < block.end);
     if (index === -1) {
       return;
     }
 
     // Can't split at the first cell
-    const oldLayoutBlock = layout[index];
+    const oldLayoutBlock = blockLayout[index];
     if (cursor === oldLayoutBlock.start) {
       return;
     }
@@ -155,19 +172,26 @@ function App() {
     newBlocks.splice(index + 1, 0, newBlock);
 
     setBlocks(newBlocks);
-  }, [blocks, cursor, layout]);
+  }, [blocks, blockLayout, cursor]);
+
+  const visibleStart = 150;
+  const visibleEnd = 200;
 
   return data ? (
     <div className="App">
       <div className="Blocks">
         <div className="Scroller">
-          {layout.map(({ type, start, length }) => (
+          {blockLayout.map(({ type, start, length, top, height }) => (
             <Block
               key={start}
               type={type}
+              data={data}
               start={start}
               length={length}
-              data={data}
+              visibleStart={visibleStart}
+              visibleEnd={visibleEnd}
+              top={top}
+              height={height}
               cursor={cursor}
               contentsComponent={componentsForType[type]}
               onUpdateCursor={setCursor}
