@@ -2,19 +2,19 @@ import React, { FunctionComponent, useCallback, useEffect, useLayoutEffect, useM
 import './App.css';
 import Block from './Block';
 import BlockType from './BlockType';
-import DropArea from './DropArea';
 import HexBlock from './HexBlock';
+import PixelBlock from './PixelBlock';
+import TextBlock from './TextBlock';
 import Inspector from './Inspector';
+import DropArea from './DropArea';
 import Layout from './Layout';
 import layoutsForType from './layoutsForType';
-// import PixelBlock from './PixelBlock';
-import TextBlock from './TextBlock';
 import ViewProps from './ViewProps';
 
 const componentsForType: { [blockType: string]: FunctionComponent<ViewProps> } = {
   [BlockType.Hex]: HexBlock,
   [BlockType.Text]: TextBlock,
-  // [BlockType.Pixel]: PixelBlock,
+  [BlockType.Pixel]: PixelBlock,
 };
 
 interface BlockDefinition {

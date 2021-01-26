@@ -55,12 +55,25 @@
   cursor: pointer;
 }
 
-.TextCell {
+.Text .Cell {
   padding: 3px 1px;
+}
+
+.Pixel .Cell {
+  padding: 0;
+  border: 1px solid transparent;
+}
+
+.Pixel.Row {
+  height: 8px;
 }
 
 .Cell.Selected {
   background: var(--yellow);
   color: var(--base03);
   border-radius: 8px;
+}
+
+.Pixel .Cell.Selected {
+  border-color: var(--yellow);
 }

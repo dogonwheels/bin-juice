@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, ReactNode, useCallback } from 'react';
 import BitLength from './BitLength';
 import ViewProps from './ViewProps';
 
@@ -11,7 +11,7 @@ const steps = {
 export interface RowProps extends ViewProps {
   className?: string;
   bitLength: BitLength;
-  cellFormatter: (value: number) => string;
+  cellFormatter: (position: number, value: number) => ReactNode;
 }
 
 function Row({ data, start, length, cursor, bitLength, cellFormatter, className, onUpdateCursor }: RowProps) {
@@ -28,7 +28,8 @@ function Row({ data, start, length, cursor, bitLength, cellFormatter, className,
 
   const step = steps[bitLength];
 
-  for (let position = start; position < start + length; position += step) {
+  const end = Math.min(start + length, data.byteLength - 4);
+  for (let position = start; position < end; position += step) {
     const isSelected = cursor === position;
     let value = data.getUint8(position);
     if (bitLength === BitLength.Word) {
@@ -40,15 +41,15 @@ function Row({ data, start, length, cursor, bitLength, cellFormatter, className,
     result.push(
       <span
         onClick={onCellClick}
-        className={`Cell${isSelected ? ' Selected' : ''} ${className ?? ''}`}
+        className={`Cell${isSelected ? ' Selected' : ''}`}
         key={position}
         data-position={position}
       >
-        {cellFormatter(value)}
+        {cellFormatter(position, value)}
       </span>,
     );
   }
-  return <div className="Row">{result}</div>;
+  return <div className={`Row ${className ?? ''}`}>{result}</div>;
 }
 
 export default Row;

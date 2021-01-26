@@ -1,7 +1,7 @@
 enum BlockType {
   Text = 'Text',
   Hex = 'Hex',
-  //Pixel,
+  Pixel = 'Pixel',
 }
 
 export default BlockType;
