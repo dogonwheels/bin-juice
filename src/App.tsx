@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import './App.css';
 import Block from './Block';
 import BlockType from './BlockType';
 import HexBlock from './HexBlock';
@@ -10,6 +9,7 @@ import DropArea from './DropArea';
 import Layout from './Layout';
 import layoutsForType from './layoutsForType';
 import ViewProps from './ViewProps';
+import './App.css';
 
 const componentsForType: { [blockType: string]: FunctionComponent<ViewProps> } = {
   [BlockType.Hex]: HexBlock,
@@ -41,10 +41,9 @@ function App() {
   const [visibleStart, setVisibleStart] = useState(0);
   const [visibleEnd, setVisibleEnd] = useState(0);
 
-  // DOMFIXME: useUrlAsBuffer/Blocks
   useEffect(() => {
     async function createFile() {
-      let response = await fetch('FLAG_B24.BMP');
+      let response = await fetch('CT-MONO2-16-brain.dcm');
       let data = await response.blob();
       let array = await data.arrayBuffer();
       setData(new DataView(array));
