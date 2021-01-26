@@ -1,9 +1,7 @@
-import Layout from './Layout';
+import RowLayout from './RowLayout';
 
-const rowHeight = 32;
-
-export default class HexLayout extends Layout {
-  static columns = 16;
-
-  getHeight = () => Math.ceil(this.length / HexLayout.columns) * rowHeight;
+export default class HexLayout extends RowLayout {
+  constructor(length: number) {
+    super(length, 16, 32);
+  }
 }

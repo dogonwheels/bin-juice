@@ -4,7 +4,6 @@ import Row, { RowProps } from './Row';
 
 interface RowsProps extends RowProps {
   className?: string;
-  columns: number;
 }
 
 const Rows: FunctionComponent<RowsProps> = ({ start, length, cursor, columns, ...props }) => {
@@ -13,7 +12,7 @@ const Rows: FunctionComponent<RowsProps> = ({ start, length, cursor, columns, ..
     const rowStart = start + row * columns;
     const rowEnd = Math.min(start + length, rowStart + columns);
     const rowLength = rowEnd - rowStart;
-    rows.push(<Row key={row} start={rowStart} length={rowLength} cursor={cursor} {...props} />);
+    rows.push(<Row key={row} start={rowStart} length={rowLength} cursor={cursor} columns={columns} {...props} />);
   }
 
   return <div>{rows}</div>;

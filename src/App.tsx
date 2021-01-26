@@ -195,7 +195,7 @@ function App() {
     <div className="App">
       <div className="Blocks" onScroll={onUpdateScroll} ref={scroller}>
         <div className="Scroller" style={scrollerStyle}>
-          {blockLayout.map(({ type, start, length, top, height }) => (
+          {blockLayout.map(({ type, start, length, top, height, layout }) => (
             <Block
               key={start}
               type={type}
@@ -206,6 +206,7 @@ function App() {
               visibleEnd={visibleEnd}
               top={top}
               height={height}
+              columns={layout.columns}
               cursor={cursor}
               contentsComponent={componentsForType[type]}
               onUpdateCursor={setCursor}

@@ -4,12 +4,9 @@ import Rows from './Rows';
 import ViewProps from './ViewProps';
 
 const TextBlock: FunctionComponent<ViewProps> = (props) => {
-  const columns = 32;
-  const formatter = useCallback((value) => (value ? String.fromCharCode(value) : '.'), []);
+  const formatter = useCallback((value) => String.fromCharCode(value).replace(/[^ -~]+/g, '.'), []);
 
-  return (
-    <Rows className="TextCell" columns={columns} bitLength={BitLength.Byte} cellFormatter={formatter} {...props} />
-  );
+  return <Rows className="TextCell" bitLength={BitLength.Byte} cellFormatter={formatter} {...props} />;
 };
 
 export default TextBlock;
