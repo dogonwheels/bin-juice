@@ -6,8 +6,8 @@
 }
 
 .Block.Selected {
-  color: var(--base02);
-  background-color: var(--orange);
+  color: var(--base2);
+  background-color: var(--base02);
   border-radius: 8px 0 0 8px;
 }
 
@@ -40,7 +40,7 @@
 
 .BlockOptionList {
   padding: 8px;
-  background: var(--orange);
+  background: var(--base02);
   border-radius: 8px 0 0 8px;
 }
 

@@ -1,0 +1,9 @@
+.InspectorRow {
+  padding: 8px;
+  color: var(--base02);
+}
+
+.InspectorHeader {
+  color: var(--base03);
+  font-weight: bold;
+}
