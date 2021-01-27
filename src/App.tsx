@@ -3,6 +3,7 @@ import Block from './Block';
 import BlockType from './BlockType';
 import HexBlock from './HexBlock';
 import PixelBlock from './PixelBlock';
+import Pixel16Block from './Pixel16Block';
 import TextBlock from './TextBlock';
 import Inspector from './Inspector';
 import DropArea from './DropArea';
@@ -15,6 +16,7 @@ const componentsForType: { [blockType: string]: FunctionComponent<ViewProps> } =
   [BlockType.Hex]: HexBlock,
   [BlockType.Text]: TextBlock,
   [BlockType.Pixel]: PixelBlock,
+  [BlockType.Pixel16]: Pixel16Block,
 };
 
 interface BlockDefinition {
@@ -47,17 +49,22 @@ function App() {
       let data = await response.blob();
       let array = await data.arrayBuffer();
       setData(new DataView(array));
-
-      const blockSize = 1024;
-      const blocks = [];
-      for (let position = 0; position < array.byteLength; position += blockSize) {
-        const length = Math.min(blockSize, array.byteLength - position);
-        blocks.push({ type: BlockType.Hex, length });
-      }
-      setBlocks(blocks);
     }
     createFile();
   }, []);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    const blockSize = 1024;
+    const blocks = [];
+    for (let position = 0; position < data.byteLength; position += blockSize) {
+      const length = Math.min(blockSize, data.byteLength - position);
+      blocks.push({ type: BlockType.Hex, length });
+    }
+    setBlocks(blocks);
+  }, [data]);
 
   // Cache more detail about the layout
   const blockLayout = useMemo(() => {

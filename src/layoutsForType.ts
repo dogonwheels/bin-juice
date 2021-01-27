@@ -7,6 +7,7 @@ const layoutsForType = {
   [BlockType.Hex]: HexLayout,
   [BlockType.Text]: TextLayout,
   [BlockType.Pixel]: PixelLayout,
+  [BlockType.Pixel16]: PixelLayout,
 };
 
 export default layoutsForType;
